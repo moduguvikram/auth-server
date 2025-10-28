@@ -1,4 +1,14 @@
 
+Prerequisites:
+Python 3.0
+Poetry Package manager
+
+How to run the server:
+
+
+python3 src/auth_server/app.py 
+
+
 1️⃣ Register a user
 
 curl -X POST https://127.0.0.1:5000/register_user -H "Content-Type: application/json" -d '{"username":"modugu","password":"vikram123"}' -k
