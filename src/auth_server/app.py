@@ -13,8 +13,12 @@ import qrcode
 
 from authlib.oauth2.rfc6749 import grants
 from authlib.oauth2.rfc6750 import BearerTokenValidator
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+app = Flask(
+    __name__,
+    instance_path='/tmp',
+    instance_relative_config=True
+    )
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/dev.db"
 app.config["SECRET_KEY"] = "super-secret-change-me"
 app.config["OAUTH2_REFRESH_TOKEN_GENERATOR"] = True
 db.init_app(app)
