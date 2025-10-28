@@ -1,6 +1,4 @@
 from mangum import Mangum
-import sys
-import os
-from api.app import app  
+from app import app
 
 handler = Mangum(app)

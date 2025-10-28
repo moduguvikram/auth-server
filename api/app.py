@@ -6,7 +6,7 @@ from authlib.integrations.flask_oauth2 import AuthorizationServer, ResourceProte
 from authlib.integrations.sqla_oauth2 import create_query_client_func, create_save_token_func, create_bearer_token_validator
 from werkzeug.security import gen_salt
 from werkzeug.security import generate_password_hash, check_password_hash
-from api.models import db, User, OAuth2Client, OAuth2Token
+from models import db, User, OAuth2Client, OAuth2Token
 import pyotp
 import qrcode
 
