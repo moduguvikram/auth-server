@@ -1,7 +1,13 @@
 
 Prerequisites:
+
 Python 3.0
 Poetry Package manager
+
+How to Install the dependencies
+
+poetry install
+
 
 How to run the server:
 
