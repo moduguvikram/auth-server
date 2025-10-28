@@ -174,5 +174,5 @@ def profile():
 #  HTTPS for local testing
 # ------------------------------------------------------------
 
-if __name__ == "__main__":
-    app.run(debug=True, ssl_context="adhoc")
+# if __name__ == "__main__":
+#     app.run(debug=True, ssl_context="adhoc")
