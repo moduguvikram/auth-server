@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 from flask import Flask, request, jsonify, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from authlib.integrations.flask_oauth2 import AuthorizationServer, ResourceProtector, current_token
@@ -7,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, OAuth2Client, OAuth2Token
 import pyotp
 import qrcode
-import os
+
 from authlib.oauth2.rfc6749 import grants
 from authlib.oauth2.rfc6750 import BearerTokenValidator
 app = Flask(__name__)
