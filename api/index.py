@@ -1,4 +1,8 @@
-from mangum import Mangum
 from app import app
 
-handler = Mangum(app)
+# For Vercel deployment
+if __name__ == "__main__":
+    app.run(debug=True)
+else:
+    # This is the WSGI application for Vercel
+    application = app
