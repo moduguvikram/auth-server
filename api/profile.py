@@ -1,45 +1,42 @@
+from http.server import BaseHTTPRequestHandler
 import json
 
-def handler(request):
-    if request.method != 'GET':
-        return {
-            'statusCode': 405,
-            'body': json.dumps({'error': 'Method not allowed'})
-        }
-    
-    try:
-        # Get Authorization header
-        auth_header = request.headers.get('Authorization', '')
-        
-        if not auth_header.startswith('Bearer '):
-            return {
-                'statusCode': 401,
-                'body': json.dumps({'error': 'Missing or invalid authorization header'})
-            }
-        
-        access_token = auth_header[7:]  # Remove 'Bearer ' prefix
-        
-        if not access_token:
-            return {
-                'statusCode': 401,
-                'body': json.dumps({'error': 'Missing access token'})
-            }
-        
-        # For demo purposes, return mock profile data
-        # In production, validate token and return actual user data
-        return {
-            'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        try:
+            # Get Authorization header
+            auth_header = self.headers.get('Authorization', '')
+            
+            if not auth_header.startswith('Bearer '):
+                self.send_response(401)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'Missing or invalid authorization header'}).encode())
+                return
+            
+            access_token = auth_header[7:]  # Remove 'Bearer ' prefix
+            
+            if not access_token:
+                self.send_response(401)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'Missing access token'}).encode())
+                return
+            
+            # For demo purposes, return mock profile data
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            response = {
                 'type': 'user',
                 'username': 'demo_user',
                 'otp_verified': True,
                 'message': 'Profile access successful'
-            })
-        }
-        
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
+            }
+            self.wfile.write(json.dumps(response).encode())
+            
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'error': str(e)}).encode())
