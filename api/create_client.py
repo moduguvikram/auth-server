@@ -1,40 +1,40 @@
 import json
 import secrets
 import string
+from http.server import BaseHTTPRequestHandler
 
-def handler(request):
-    if request.method != 'POST':
-        return {
-            'statusCode': 405,
-            'body': json.dumps({'error': 'Method not allowed'})
-        }
-    
-    try:
-        data = json.loads(request.body)
-        client_name = data.get('client_name')
-        redirect_uri = data.get('redirect_uri')
-        
-        if not client_name or not redirect_uri:
-            return {
-                'statusCode': 400,
-                'body': json.dumps({'error': 'Client name and redirect URI required'})
-            }
-        
-        # Generate client credentials
-        client_id = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(24))
-        client_secret = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(48))
-        
-        return {
-            'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({
+class handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        try:
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            data = json.loads(post_data.decode('utf-8'))
+            
+            client_name = data.get('client_name')
+            redirect_uri = data.get('redirect_uri')
+            
+            if not client_name or not redirect_uri:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'Client name and redirect URI required'}).encode())
+                return
+            
+            # Generate client credentials
+            client_id = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(24))
+            client_secret = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(48))
+            
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            response = {
                 'client_id': client_id,
                 'client_secret': client_secret
-            })
-        }
-        
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
+            }
+            self.wfile.write(json.dumps(response).encode())
+            
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'error': str(e)}).encode())
