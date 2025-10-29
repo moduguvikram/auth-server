@@ -1,5 +1,8 @@
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+
 from app import app
 
-# Vercel expects the Flask app to be directly callable
-# Flask apps are WSGI applications by default
+# Export the Flask app for Vercel
 app = app
