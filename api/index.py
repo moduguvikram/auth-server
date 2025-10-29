@@ -1,8 +1,14 @@
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
+from flask import Flask, request, jsonify
 
-from app import app
+app = Flask(__name__)
 
-# Export the Flask app for Vercel
-app = app
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    return jsonify(message="User registration endpoint", status="working")
+
+@app.route('/test')
+def test():
+    return jsonify(message="Test endpoint working")
+
+if __name__ == '__main__':
+    app.run(debug=True)
