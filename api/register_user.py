@@ -2,7 +2,7 @@ import json
 import pyotp
 import hashlib
 from http.server import BaseHTTPRequestHandler
-from storage import save_user, get_user
+from .storage import save_user, get_user
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):

@@ -1,7 +1,7 @@
 import json
 import pyotp
 from http.server import BaseHTTPRequestHandler
-from storage import get_user, update_user_otp_verified
+from .storage import get_user, update_user_otp_verified
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):

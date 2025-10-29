@@ -2,7 +2,7 @@ import json
 import secrets
 import string
 from http.server import BaseHTTPRequestHandler
-from storage import save_client
+from .storage import save_client
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
