@@ -1,6 +1,9 @@
 import json
 import pyotp
 import hashlib
+import qrcode
+import io
+import base64
 from http.server import BaseHTTPRequestHandler
 from .storage import save_user, get_user
 
@@ -42,12 +45,23 @@ class handler(BaseHTTPRequestHandler):
                 issuer_name="ThisOAuthServer"
             )
             
+            # Generate QR code as base64 image
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(otp_uri)
+            qr.make(fit=True)
+            
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = io.BytesIO()
+            img.save(buffer, format='PNG')
+            qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+            
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             response = {
                 'message': 'User registered',
-                'otp_uri': otp_uri
+                'otp_uri': otp_uri,
+                'qr_code': f'data:image/png;base64,{qr_base64}'
             }
             self.wfile.write(json.dumps(response).encode())
             
